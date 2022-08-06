@@ -25,6 +25,27 @@ export default function lastSalesPage(props) {
 		}
 	}, [data]);
 
+	// Custom Data Transformation using react useEffect hooks
+	// useEffect(() => {
+	//   setIsLoading(true);
+	//   fetch('https://nextjs-course-c81cc-default-rtdb.firebaseio.com/sales.json')
+	//     .then((response) => response.json())
+	//     .then((data) => {
+	//       const transformedSales = [];
+
+	//       for (const key in data) {
+	//         transformedSales.push({
+	//           id: key,
+	//           username: data[key].username,
+	//           volume: data[key].volume,
+	//         });
+	//       }
+
+	//       setSales(transformedSales);
+	//       setIsLoading(false);
+	//     });
+	// }, []);
+
 	if (error) {
 		return <div>Failed to load</div>;
 	}
