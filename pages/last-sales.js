@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 
 function lastSalesPage() {
 	const [sales, setSales] = useState();
-	const [isLoading, setLoading] = useState(false);
+	// const [isLoading, setLoading] = useState(false);
 
+	const { data, error } = useSWR(
+		"https://nextjs-course-64cee-default-rtdb.asia-southeast1.firebasedatabase.app/sales.json",
+		(url) => fetch(url).then((response) => response.json())
+	);
+
+	// useSWR return data needed to transform before setting state
 	useEffect(() => {
-		setLoading(true);
-		fetch(
-			`https://nextjs-course-64cee-default-rtdb.asia-southeast1.firebasedatabase.app/sales.json`
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				const transformSales = [];
-				for (const key in data) {
-					transformSales.push({
-						id: key,
-						username: data[key].username,
-						volume: data[key].volume,
-					});
-				}
+		if (data) {
+			const transformSales = [];
+			for (const key in data) {
+				transformSales.push({
+					id: key,
+					username: data[key].username,
+					volume: data[key].volume,
+				});
+			}
+			setSales(transformSales);
+		}
+	}, [data]);
 
-				setSales(transformSales);
-				setLoading(false);
-			});
-	}, []);
-
-	if (isLoading) {
-		return <div>Loading sales</div>;
+	if (error) {
+		return <div>Failed to load</div>;
 	}
 
-	if (!sales) {
-		return <div>No sales</div>;
+	if (!data || !sales) {
+		return <div>Loading...</div>;
 	}
 
 	return (
